@@ -21,6 +21,7 @@
     "@types/react-dom": "^16.9.4",
     "@types/react-router": "^5.1.4",
     "@types/react-router-dom": "^5.1.3",
+    "cordova-plugin-canvas2image": "git+https://github.com/devgeeks/Canvas2ImagePlugin.git",
     "ionicons": "^5.0.0",
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "react": "^16.13.0",

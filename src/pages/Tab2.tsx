@@ -16,7 +16,7 @@ import {
   IonActionSheet,
   IonText,
 } from "@ionic/react";
-import { camera, trash, close } from "ionicons/icons";
+import { camera, archive, trash, close } from "ionicons/icons";
 import { usePhotoGallery, Photo } from "../hooks/usePhotoGallery";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 
@@ -58,16 +58,21 @@ const Tab2: React.FC = () => {
           <IonRow>
             {/* Location: mtp:/HD1905/Internal shared storage/Android/data/io.ionic.starter/files/Pictures/ */}
             {/* filter out photos that match barcode, then map those to display in the grid on screen */}
-            {photos.filter((photo, index) => barcode == photo.filepath.split("/").slice(-1)[0].split("_")[0])
-            .map((photo, index) => (
+            {photos
+              .filter(
+                (photo, index) =>
+                  barcode ==
+                  photo.filepath.split("/").slice(-1)[0].split("_")[0]
+              )
+              .map((photo, index) => (
                 <IonCol size="6" key={index}>
                   <IonImg
                     onClick={() => setPhotoToDelete(photo)}
                     src={photo.base64 ?? photo.webviewPath}
                   />
                   {photo.filepath}
-                </IonCol>            
-            ))}
+                </IonCol>
+              ))}
           </IonRow>
         </IonGrid>
 
@@ -85,6 +90,22 @@ const Tab2: React.FC = () => {
         <IonFab vertical="bottom" horizontal="center" slot="fixed">
           <IonFabButton onClick={() => takePhoto()}>
             <IonIcon icon={camera}></IonIcon>
+          </IonFabButton>
+        </IonFab>
+
+        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonFabButton onClick={() => 
+              window.canvas2ImagePlugin.saveImageDataToLibrary(
+                function(msg){
+                    console.log(msg);
+                },
+                function(err){
+                    console.log(err);
+                },
+                document.getElementById('myCanvas')
+              )
+            }>
+            <IonIcon icon={archive}></IonIcon>
           </IonFabButton>
         </IonFab>
 
