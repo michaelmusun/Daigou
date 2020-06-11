@@ -16,9 +16,13 @@ import {
   IonActionSheet,
   IonText,
 } from "@ionic/react";
+import { base64FromPath } from "@ionic/react-hooks/filesystem";
+// import * as canvas2ImagePlugin from 'cordova-plugin-canvas2image';
+// import canvas2ImagePlugin from "cordova-plugin-canvas2image";
 import { camera, archive, trash, close } from "ionicons/icons";
 import { usePhotoGallery, Photo } from "../hooks/usePhotoGallery";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
+import { Base64ToGallery } from "@ionic-native/base64-to-gallery";
 
 const Tab2: React.FC = () => {
   const [barcode, setBarcode] = useState("-1");
@@ -87,19 +91,21 @@ const Tab2: React.FC = () => {
           </IonRow>
         </IonGrid> */}
 
+        {/* Take Photo Button */}
         <IonFab vertical="bottom" horizontal="center" slot="fixed">
           <IonFabButton onClick={() => takePhoto()}>
             <IonIcon icon={camera}></IonIcon>
           </IonFabButton>
         </IonFab>
 
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        {/* Canvas2Image button*/}
+        {/* <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonFabButton onClick={() => 
-              window.canvas2ImagePlugin.saveImageDataToLibrary(
-                function(msg){
+              canvas2ImagePlugin.saveImageDataToLibrary(
+                function(msg:any){
                     console.log(msg);
                 },
-                function(err){
+                function(err:any){
                     console.log(err);
                 },
                 document.getElementById('myCanvas')
@@ -107,7 +113,13 @@ const Tab2: React.FC = () => {
             }>
             <IonIcon icon={archive}></IonIcon>
           </IonFabButton>
-        </IonFab>
+        </IonFab> */}
+
+        {/* trying to get base64 from photo, will try instead to do anonymously below */}
+        {/* const savePicture = async (photo: CameraPhoto, fileName: string): Promise<Photo> => {
+    let base64Data: string;
+      base64Data = await base64FromPath(photo.webPath!);
+  }; */}
 
         <IonActionSheet
           isOpen={!!photoToDelete}
@@ -127,6 +139,38 @@ const Tab2: React.FC = () => {
               text: "Cancel",
               icon: close,
               role: "cancel",
+            },
+            {
+              text: "Save to Gallery",
+              role: "save",
+              icon: archive,
+              handler: () => {
+                // I removed the argument 'img_' from Base64ToGallery
+                if (photoToDelete) {
+                  // const base64Data:string = (async () => {
+                  //   let b64data = await base64FromPath(photoToDelete.webviewPath!);
+                  //   return b64data;
+                  // });
+
+                  const download_photo = async () => {
+                    const base64Data = await base64FromPath(
+                      photoToDelete.webviewPath!
+                    );
+                    // return b64D;
+                    // return Promise.resolve(b64D);
+
+                    console.log("Photo's base64: ", base64Data);
+                    console.log("Photo's base64: ", photoToDelete.webviewPath);
+                    Base64ToGallery.base64ToGallery(base64Data).then(
+                      (res) => console.log("Saved image to gallery ", res),
+                      (err) =>
+                        console.log("Error saving image to gallery ", err)
+                    );
+                  };
+                  download_photo();
+                  setPhotoToDelete(undefined);
+                }
+              },
             },
           ]}
           onDidDismiss={() => setPhotoToDelete(undefined)}
