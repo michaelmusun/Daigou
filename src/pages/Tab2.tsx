@@ -158,10 +158,14 @@ const Tab2: React.FC = () => {
                     );
                     // return b64D;
                     // return Promise.resolve(b64D);
-
+                    const base64Data_btoa = btoa(base64Data);
                     console.log("Photo's base64: ", base64Data);
-                    console.log("Photo's base64: ", photoToDelete.webviewPath);
-                    Base64ToGallery.base64ToGallery(base64Data).then(
+                    console.log("Photo's base64_btoa: ", base64Data_btoa);
+                    console.log("Photo's webpath: ", photoToDelete.webviewPath);
+                    Base64ToGallery.base64ToGallery(base64Data, {
+                      prefix: "",
+                      mediaScanner: true,
+                    }).then(
                       (res) => console.log("Saved image to gallery ", res),
                       (err) =>
                         console.log("Error saving image to gallery ", err)
