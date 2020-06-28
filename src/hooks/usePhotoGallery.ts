@@ -39,7 +39,7 @@ export function usePhotoGallery(barcode: string) {
       resultType: CameraResultType.Uri,
       source: CameraSource.Camera,
       quality: 100,
-      saveToGallery: true
+      // saveToGallery: true
     });
     const fileName = barcode + '_' + new Date().getTime() + '.jpeg';
     const savedFileImage = await savePicture(cameraPhoto, fileName);

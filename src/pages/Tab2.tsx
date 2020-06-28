@@ -15,14 +15,28 @@ import {
   IonImg,
   IonActionSheet,
   IonText,
+  IonInput,
+  IonSegment,
+  IonSegmentButton
 } from "@ionic/react";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 // import * as canvas2ImagePlugin from 'cordova-plugin-canvas2image';
 // import canvas2ImagePlugin from "cordova-plugin-canvas2image";
-import { camera, archive, trash, close } from "ionicons/icons";
+import {
+  camera,
+  archive,
+  trash,
+  close,
+  enter,
+  barcodeOutline,
+  removeOutline
+} from "ionicons/icons";
 import { usePhotoGallery, Photo } from "../hooks/usePhotoGallery";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 import { Base64ToGallery } from "@ionic-native/base64-to-gallery";
+import { Media } from "capacitor-media";
+
+const media = new Media();
 
 const Tab2: React.FC = () => {
   const [barcode, setBarcode] = useState("-1");
@@ -41,7 +55,7 @@ const Tab2: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Photo Gallery</IonTitle>
+          <IonTitle>AJ美國代購</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -52,14 +66,15 @@ const Tab2: React.FC = () => {
         </IonHeader>
         <IonRow>
           <IonCol>
-            <IonText>{barcode}</IonText>
+            {/* <IonText>{barcode}</IonText> */}
+            <IonInput value={barcode}></IonInput>
           </IonCol>
           <IonCol>
             <IonButton onClick={openScanner}>Scan Barcode</IonButton>
           </IonCol>
         </IonRow>
-        <IonGrid>
-          <IonRow>
+        <IonGrid class="ion-no-padding">
+          <IonRow class="photorow">
             {/* Location: mtp:/HD1905/Internal shared storage/Android/data/io.ionic.starter/files/Pictures/ */}
             {/* filter out photos that match barcode, then map those to display in the grid on screen */}
             {photos
@@ -69,13 +84,32 @@ const Tab2: React.FC = () => {
                   photo.filepath.split("/").slice(-1)[0].split("_")[0]
               )
               .map((photo, index) => (
-                <IonCol size="6" key={index}>
+                <IonCol size="12" key={index} class="ion-padding-bottom">
                   <IonImg
                     onClick={() => setPhotoToDelete(photo)}
                     src={photo.base64 ?? photo.webviewPath}
                   />
-                  {photo.filepath}
+                  {/* {photo.filepath} */}
+                  {/* <IonSegment color="secondary" value="call">
+                    <IonSegmentButton value="call">
+                      <IonIcon icon={removeOutline}></IonIcon>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="heart">
+                      <IonIcon icon={camera}></IonIcon>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="map">
+                      <IonIcon icon={camera}></IonIcon>
+                    </IonSegmentButton>
+                  </IonSegment> */}
                 </IonCol>
+                // <IonImg
+                //   onClick={() => setPhotoToDelete(photo)}
+                //   src={photo.base64 ?? photo.webviewPath}
+                //   alt={"testing photo. long paragraph doremifasolatido"}
+                // />
+                // <IonCol>
+                //   {photo.filepath}
+                // </IonCol>
               ))}
           </IonRow>
         </IonGrid>
@@ -140,42 +174,61 @@ const Tab2: React.FC = () => {
               icon: close,
               role: "cancel",
             },
-            {
-              text: "Save to Gallery",
-              role: "save",
-              icon: archive,
-              handler: () => {
-                // I removed the argument 'img_' from Base64ToGallery
-                if (photoToDelete) {
-                  // const base64Data:string = (async () => {
-                  //   let b64data = await base64FromPath(photoToDelete.webviewPath!);
-                  //   return b64data;
-                  // });
+            // TWO ATTEMPTS TO SAVE TO GALLERY
+            // {
+            //   text: "Save to Gallery",
+            //   role: "save",
+            //   icon: archive,
+            //   handler: () => {
+            //     // I removed the argument 'img_' from Base64ToGallery
+            //     if (photoToDelete) {
+            //       // const base64Data:string = (async () => {
+            //       //   let b64data = await base64FromPath(photoToDelete.webviewPath!);
+            //       //   return b64data;
+            //       // });
 
-                  const download_photo = async () => {
-                    const base64Data = await base64FromPath(
-                      photoToDelete.webviewPath!
-                    );
-                    // return b64D;
-                    // return Promise.resolve(b64D);
-                    const base64Data_btoa = btoa(base64Data);
-                    console.log("Photo's base64: ", base64Data);
-                    console.log("Photo's base64_btoa: ", base64Data_btoa);
-                    console.log("Photo's webpath: ", photoToDelete.webviewPath);
-                    Base64ToGallery.base64ToGallery(base64Data, {
-                      prefix: "",
-                      mediaScanner: true,
-                    }).then(
-                      (res) => console.log("Saved image to gallery ", res),
-                      (err) =>
-                        console.log("Error saving image to gallery ", err)
-                    );
-                  };
-                  download_photo();
-                  setPhotoToDelete(undefined);
-                }
-              },
-            },
+            //       const download_photo = async () => {
+            //         const base64Data = await base64FromPath(
+            //           photoToDelete.webviewPath!
+            //         );
+            //         // return b64D;
+            //         // return Promise.resolve(b64D);
+            //         const base64Data_btoa = btoa(base64Data);
+            //         console.log("Photo's base64: ", base64Data);
+            //         console.log("Photo's base64_btoa: ", base64Data_btoa);
+            //         console.log("Photo's webpath: ", photoToDelete.webviewPath);
+            //         Base64ToGallery.base64ToGallery(base64Data, {
+            //           prefix: "",
+            //           mediaScanner: true,
+            //         }).then(
+            //           (res) => console.log("Saved image to gallery ", res),
+            //           (err) =>
+            //             console.log("Error saving image to gallery ", err)
+            //         );
+            //       };
+            //       download_photo();
+            //       setPhotoToDelete(undefined);
+            //     }
+            //   },
+            // },
+            // {
+            //   text: "Capacitor-media Save to Gallery",
+            //   role: "save-2",
+            //   icon: enter,
+            //   handler: () => {
+            //     if (photoToDelete) {
+            //       console.log("Attempting media.savePhoto:");
+            //       media
+            //         .savePhoto({
+            //           path: photoToDelete.webviewPath!,
+            //           album: "Daigou",
+            //         })
+            //         .then(console.log)
+            //         .catch(console.log);
+            //       setPhotoToDelete(undefined);
+            //     }
+            //   },
+            // },
           ]}
           onDidDismiss={() => setPhotoToDelete(undefined)}
         />
