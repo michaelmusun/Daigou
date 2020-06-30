@@ -84,7 +84,7 @@ const Tab2: React.FC = () => {
                   photo.filepath.split("/").slice(-1)[0].split("_")[0]
               )
               .map((photo, index) => (
-                <IonCol size="12" key={index} class="ion-padding-bottom">
+                <IonCol size="12" key={index} class="ion-margin-bottom">
                   <IonImg
                     onClick={() => setPhotoToDelete(photo)}
                     src={photo.base64 ?? photo.webviewPath}
